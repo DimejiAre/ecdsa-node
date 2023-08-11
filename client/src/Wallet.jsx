@@ -1,6 +1,6 @@
 import server from "./server";
 
-function Wallet({ address, setAddress, balance, setBalance }) {
+function Wallet({ address, setAddress, balance, setBalance, signature, setSignature }) {
   async function onChange(evt) {
     const address = evt.target.value;
     setAddress(address);
@@ -14,6 +14,11 @@ function Wallet({ address, setAddress, balance, setBalance }) {
     }
   }
 
+  async function updateSignature(evt){
+    const signatureValue = evt.target.value;
+    setSignature(signatureValue)
+  }
+
   return (
     <div className="container wallet">
       <h1>Your Wallet</h1>
@@ -24,6 +29,11 @@ function Wallet({ address, setAddress, balance, setBalance }) {
       </label>
 
       <div className="balance">Balance: {balance}</div>
+
+      <label>
+        Signature
+        <input placeholder="Enter Signature..." value={signature} onChange={updateSignature}></input>
+      </label>
     </div>
   );
 }

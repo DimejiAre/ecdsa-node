@@ -1,7 +1,8 @@
 import { useState } from "react";
 import server from "./server";
+import { getAddressFromSignature } from "./utils/getAddressFromSignature";
 
-function Transfer({ address, setBalance }) {
+function Transfer({ address, setBalance, signature }) {
   const [sendAmount, setSendAmount] = useState("");
   const [recipient, setRecipient] = useState("");
 
@@ -11,14 +12,19 @@ function Transfer({ address, setBalance }) {
     evt.preventDefault();
 
     try {
-      const {
-        data: { balance },
-      } = await server.post(`send`, {
-        sender: address,
-        amount: parseInt(sendAmount),
-        recipient,
-      });
-      setBalance(balance);
+      const senderAddress = await getAddressFromSignature(signature);
+      if (senderAddress !== address) {
+        alert("Invalid signature!")
+      } else {
+        const {
+          data: { balance },
+        } = await server.post(`send`, {
+          sender: address,
+          amount: parseInt(sendAmount),
+          recipient,
+        });
+        setBalance(balance);
+      }
     } catch (ex) {
       alert(ex.response.data.message);
     }
